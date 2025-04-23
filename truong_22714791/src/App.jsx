@@ -8,6 +8,8 @@ function App() {
     genre: '',
     year: ''
   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('Tất cả');
 
   useEffect(() => {
     const savedBooks = localStorage.getItem('books');
@@ -52,6 +54,14 @@ function App() {
     setBooks(updatedBooks);
     localStorage.setItem('books', JSON.stringify(updatedBooks));
   };
+  const filteredBooks = books.filter(book => {
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGenre = selectedGenre === 'Tất cả' || book.genre === selectedGenre;
+    return matchesSearch && matchesGenre;
+  });
+  const genres = ['Tất cả', ...new Set(books.map(book => book.genre))];
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Quản lý Sách</h1>
@@ -107,7 +117,18 @@ function App() {
           Thêm sách
         </button>
       </div>
-
+      <div className="mb-6 flex flex-col md:flex-row gap-4">
+        <div className="flex-1">
+          <label className="block mb-1">Tìm kiếm</label>
+          <input
+            type="text"
+            placeholder="Tìm theo tên sách hoặc tác giả..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+      </div>
       {/* Bảng hiển thị sách như trước */}
       <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Quản lý Sách</h1>
@@ -124,19 +145,30 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {books.map((book) => (
-              <tr key={book.id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b">{book.title}</td>
-                <td className="py-2 px-4 border-b">{book.author}</td>
-                <td className="py-2 px-4 border-b">{book.genre}</td>
-                <td className="py-2 px-4 border-b">{book.year}</td>
-                <td className="py-2 px-4 border-b">
-                <button onClick={() => deleteBook(book.id)}className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                  Xoá
-                </button>
+          {filteredBooks.length > 0 ? (
+              filteredBooks.map((book) => (
+                <tr key={book.id} className="hover:bg-gray-50">
+                  <td className="py-2 px-4 border-b">{book.title}</td>
+                  <td className="py-2 px-4 border-b">{book.author}</td>
+                  <td className="py-2 px-4 border-b">{book.genre}</td>
+                  <td className="py-2 px-4 border-b">{book.year}</td>
+                  <td className="py-2 px-4 border-b">
+                    <button
+                      onClick={() => deleteBook(book.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                      Xoá
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="py-4 text-center text-gray-500">
+                  Không tìm thấy sách phù hợp
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
