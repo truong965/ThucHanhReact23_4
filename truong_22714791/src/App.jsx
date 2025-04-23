@@ -47,7 +47,11 @@ function App() {
       });
     }
   };
-
+  const deleteBook = (id) => {
+    const updatedBooks = books.filter(book => book.id !== id);
+    setBooks(updatedBooks);
+    localStorage.setItem('books', JSON.stringify(updatedBooks));
+  };
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Quản lý Sách</h1>
@@ -127,9 +131,9 @@ function App() {
                 <td className="py-2 px-4 border-b">{book.genre}</td>
                 <td className="py-2 px-4 border-b">{book.year}</td>
                 <td className="py-2 px-4 border-b">
-                  <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                    Xoá
-                  </button>
+                <button onClick={() => deleteBook(book.id)}className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                  Xoá
+                </button>
                 </td>
               </tr>
             ))}
