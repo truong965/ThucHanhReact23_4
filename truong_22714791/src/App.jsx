@@ -128,6 +128,18 @@ function App() {
             className="w-full p-2 border rounded"
           />
         </div>
+        <div>
+          <label className="block mb-1">Lọc theo thể loại</label>
+          <select
+            value={selectedGenre}
+            onChange={(e) => setSelectedGenre(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            {genres.map(genre => (
+              <option key={genre} value={genre}>{genre}</option>
+            ))}
+          </select>
+        </div>
       </div>
       {/* Bảng hiển thị sách như trước */}
       <div className="container mx-auto px-4 py-8">
