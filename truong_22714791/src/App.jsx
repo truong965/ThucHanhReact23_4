@@ -1,24 +1,46 @@
-import React,{ useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import React,{ useState, useEffect } from 'react';
 
 function App() {
-  
+  const [books, setBooks] = useState([
+    { id: 1, title: 'Sách 1', author: 'Tác giả A', genre: 'Khoa học', year: '2020' },
+    { id: 2, title: 'Sách 2', author: 'Tác giả B', genre: 'Văn học', year: '2019' },
+    { id: 3, title: 'Sách 3', author: 'Tác giả C', genre: 'Kinh tế', year: '2021' },
+  ]);
+
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg text-center w-96">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Hello, Tailwind!</h1>
-        <p className="text-gray-600">Đây là một màn hình đơn giản dùng Tailwind CSS ✨</p>
-        <button className="mt-6 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
-          Bấm thử nè
-        </button>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">Quản lý Sách</h1>
+      
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="py-2 px-4 border-b">Tên sách</th>
+              <th className="py-2 px-4 border-b">Tác giả</th>
+              <th className="py-2 px-4 border-b">Thể loại</th>
+              <th className="py-2 px-4 border-b">Năm</th>
+              <th className="py-2 px-4 border-b">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {books.map((book) => (
+              <tr key={book.id} className="hover:bg-gray-50">
+                <td className="py-2 px-4 border-b">{book.title}</td>
+                <td className="py-2 px-4 border-b">{book.author}</td>
+                <td className="py-2 px-4 border-b">{book.genre}</td>
+                <td className="py-2 px-4 border-b">{book.year}</td>
+                <td className="py-2 px-4 border-b">
+                  <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                    Xoá
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
