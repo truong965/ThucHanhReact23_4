@@ -1,14 +1,111 @@
 import React,{ useState, useEffect } from 'react';
 
 function App() {
-  const [books, setBooks] = useState([
-    { id: 1, title: 'Sách 1', author: 'Tác giả A', genre: 'Khoa học', year: '2020' },
-    { id: 2, title: 'Sách 2', author: 'Tác giả B', genre: 'Văn học', year: '2019' },
-    { id: 3, title: 'Sách 3', author: 'Tác giả C', genre: 'Kinh tế', year: '2021' },
-  ]);
+  const [books, setBooks] = useState([]);
+  const [newBook, setNewBook] = useState({
+    title: '',
+    author: '',
+    genre: '',
+    year: ''
+  });
+
+  useEffect(() => {
+    const savedBooks = localStorage.getItem('books');
+    if (savedBooks) {
+      setBooks(JSON.parse(savedBooks));
+    } else {
+      setBooks([
+        { id: 1, title: 'Sách 1', author: 'Tác giả A', genre: 'Khoa học', year: '2020' },
+        { id: 2, title: 'Sách 2', author: 'Tác giả B', genre: 'Văn học', year: '2019' },
+        { id: 3, title: 'Sách 3', author: 'Tác giả C', genre: 'Kinh tế', year: '2021' },
+      ]);
+    }
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewBook({
+      ...newBook,
+      [name]: value
+    });
+  };
+
+  const addBook = () => {
+    if (newBook.title && newBook.author && newBook.genre && newBook.year) {
+      const book = {
+        id: Date.now(),
+        ...newBook
+      };
+      const updatedBooks = [...books, book];
+      setBooks(updatedBooks);
+      localStorage.setItem('books', JSON.stringify(updatedBooks));
+      setNewBook({
+        title: '',
+        author: '',
+        genre: '',
+        year: ''
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">Quản lý Sách</h1>
+      
+      <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+        <h2 className="text-xl font-semibold mb-4">Thêm sách mới</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block mb-1">Tên sách</label>
+            <input
+              type="text"
+              name="title"
+              value={newBook.title}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Tác giả</label>
+            <input
+              type="text"
+              name="author"
+              value={newBook.author}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Thể loại</label>
+            <input
+              type="text"
+              name="genre"
+              value={newBook.genre}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Năm xuất bản</label>
+            <input
+              type="text"
+              name="year"
+              value={newBook.year}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+        </div>
+        <button
+          onClick={addBook}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Thêm sách
+        </button>
+      </div>
+
+      {/* Bảng hiển thị sách như trước */}
+      <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Quản lý Sách</h1>
       
       <div className="overflow-x-auto">
@@ -39,6 +136,7 @@ function App() {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }
