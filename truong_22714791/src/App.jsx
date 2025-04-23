@@ -1,32 +1,24 @@
 import React,{ useState, useEffect } from 'react';
-
 function App() {
   const [books, setBooks] = useState([]);
-  const [newBook, setNewBook] = useState(
-    // title: '',
-    // author: '',
-    // genre: '',
-    // year: ''
-    { id: 1, title: 'Sách 1', author: 'Tác giả A', genre: 'Khoa học', year: '2020' },
-    { id: 2, title: 'Sách 2', author: 'Tác giả B', genre: 'Văn học', year: '2019' },
-    { id: 3, title: 'Sách 3', author: 'Tác giả C', genre: 'Kinh tế', year: '2021' },
+  const [newBook, setNewBook] = useState({
+    title: '',
+    author: '',
+    genre: '',
+    year: ''}
   );
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('Tất cả');
-
   useEffect(() => {
-    // const savedBooks = localStorage.getItem('books');
-    // if (savedBooks) {
-    //   setBooks(JSON.parse(savedBooks));
-    // } else {
-    //   setBooks([
-    //     { id: 1, title: 'Sách 1', author: 'Tác giả A', genre: 'Khoa học', year: '2020' },
-    //     { id: 2, title: 'Sách 2', author: 'Tác giả B', genre: 'Văn học', year: '2019' },
-    //     { id: 3, title: 'Sách 3', author: 'Tác giả C', genre: 'Kinh tế', year: '2021' },
-    //   ]);
-    // }
+    const savedBooks = localStorage.getItem('books');
+    if (savedBooks) {
+      setBooks(JSON.parse(savedBooks));
+    } else { setBooks([
+        { id: 1, title: 'Sách 1', author: 'Tác giả A', genre: 'Khoa học', year: '2020' },
+        { id: 2, title: 'Sách 2', author: 'Tác giả B', genre: 'Văn học', year: '2019' },
+        { id: 3, title: 'Sách 3', author: 'Tác giả C', genre: 'Kinh tế', year: '2021' },
+      ]);}
   }, []);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewBook({
@@ -36,34 +28,34 @@ function App() {
   };
 
   const addBook = () => {
-    // if (newBook.title && newBook.author && newBook.genre && newBook.year) {
-    //   const book = {
-    //     id: Date.now(),
-    //     ...newBook
-    //   };
-    //   const updatedBooks = [...books, book];
-    //   setBooks(updatedBooks);
-    //   localStorage.setItem('books', JSON.stringify(updatedBooks));
-    //   setNewBook({
-    //     title: '',
-    //     author: '',
-    //     genre: '',
-    //     year: ''
-    //   });
-    // }
+    if (newBook.title && newBook.author && newBook.genre && newBook.year) {
+      const book = {
+        id: Date.now(),
+        ...newBook
+      };
+      const updatedBooks = [...books, book];
+      setBooks(updatedBooks);
+      localStorage.setItem('books', JSON.stringify(updatedBooks));
+      setNewBook({
+        title: '',
+        author: '',
+        genre: '',
+        year: ''
+      });
+    }
   };
   const deleteBook = (id) => {
     const updatedBooks = books.filter(book => book.id !== id);
     setBooks(updatedBooks);
     localStorage.setItem('books', JSON.stringify(updatedBooks));
   };
-  // const filteredBooks = books.filter(book => {
-  //   const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-  //                        book.author.toLowerCase().includes(searchTerm.toLowerCase());
-  //   const matchesGenre = selectedGenre === 'Tất cả' || book.genre === selectedGenre;
-  //   return matchesSearch && matchesGenre;
-  // });
-  const filteredBooks= books;
+  const filteredBooks = books.filter(book => {
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGenre = selectedGenre === 'Tất cả' || book.genre === selectedGenre;
+    return matchesSearch && matchesGenre;
+  });
+
   const genres = ['Tất cả', ...new Set(books.map(book => book.genre))];
 
   return (
